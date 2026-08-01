@@ -20,6 +20,7 @@ class Neo4jService:
     def __init__(self) -> None:
         self._driver: Optional[Driver] = None
         self._available: bool = False
+        self._active_uri: Optional[str] = None
         self._connect()
 
     def _connect(self) -> None:
@@ -42,20 +43,27 @@ class Neo4jService:
                 settings.neo4j_uri.replace("bolt+s://", "bolt+ssc://", 1)
             )
 
+        if self._active_uri:
+            uri_candidates = [self._active_uri] + [
+                u for u in uri_candidates if u != self._active_uri
+            ]
+
         last_error: Optional[Exception] = None
         for uri in uri_candidates:
             try:
                 driver = GraphDatabase.driver(
                     uri,
                     auth=(settings.neo4j_username, settings.neo4j_password),
+                    max_connection_lifetime=300,
+                    connection_acquisition_timeout=30,
                 )
                 driver.verify_connectivity()
                 self._driver = driver
                 self._available = True
-                if uri != settings.neo4j_uri:
+                self._active_uri = uri
+                if "+ssc" in uri:
                     logger.warning(
-                        "Neo4j connected via SSL-relaxed URI (%s). "
-                        "Local antivirus/proxy is likely intercepting TLS.",
+                        "Neo4j connected via SSL-relaxed URI (%s).",
                         uri.split("://", 1)[0],
                     )
                 else:
@@ -75,6 +83,13 @@ class Neo4jService:
         )
         self._driver = None
         self._available = False
+
+    def _reconnect(self) -> bool:
+        """Close a defunct driver and open a fresh connection."""
+        logger.info("Attempting Neo4j reconnect after defunct connection…")
+        self.close()
+        self._connect()
+        return self.is_available
 
     @property
     def is_available(self) -> bool:
@@ -125,63 +140,84 @@ class Neo4jService:
     ) -> bool:
         """Upsert academic modules, skills, and relationships into Neo4j."""
         if not self.is_available or self._driver is None:
-            logger.warning("Skipping Neo4j upsert — driver unavailable.")
-            return False
+            if not self._reconnect():
+                logger.warning("Skipping Neo4j upsert — driver unavailable.")
+                return False
 
         try:
-            with self._driver.session() as session:
-                for node in nodes:
-                    payload = node.model_dump()
-                    if node.type == "academic_module":
-                        session.run(
-                            """
-                            MERGE (c:Course {id: $id})
-                            SET c.name = $name,
-                                c.group = $group,
-                                c.type = $type,
-                                c.val = $val
-                            """,
-                            payload,
-                        )
-                    else:
-                        session.run(
-                            """
-                            MERGE (s:Skill {id: $id})
-                            SET s.name = $name,
-                                s.group = $group,
-                                s.type = $type,
-                                s.val = $val,
-                                s.gap_score = $gap_score
-                            """,
-                            payload,
-                        )
-
-                for link in links:
-                    session.run(
-                        """
-                        MATCH (a {id: $source})
-                        MATCH (b {id: $target})
-                        MERGE (a)-[r:RELATES {relationship: $relationship}]->(b)
-                        SET r.strength = $strength
-                        """,
-                        {
-                            "source": link.source,
-                            "target": link.target,
-                            "relationship": link.relationship,
-                            "strength": link.strength,
-                        },
-                    )
-            logger.info(
-                "Upserted %d nodes and %d links into Neo4j.",
-                len(nodes),
-                len(links),
-            )
-            return True
+            return self._run_upsert(nodes, links)
         except (Neo4jError, ServiceUnavailable, Exception) as exc:  # noqa: BLE001
-            logger.warning("Neo4j upsert failed: %s", exc)
+            logger.warning(
+                "Neo4j upsert failed (%s) — retrying after reconnect.",
+                exc,
+            )
+            if not self._reconnect():
+                return False
+            try:
+                return self._run_upsert(nodes, links)
+            except (Neo4jError, ServiceUnavailable, Exception) as retry_exc:  # noqa: BLE001
+                logger.warning("Neo4j upsert failed after reconnect: %s", retry_exc)
+                return False
+
+    def _run_upsert(self, nodes: List[Node], links: List[Link]) -> bool:
+        """Execute Cypher upserts on the current driver session."""
+        if self._driver is None:
             return False
 
-    def seed_demo_graph(self, nodes: List[dict[str, Any]], links: List[dict[str, Any]]) -> bool:
+        with self._driver.session() as session:
+            for node in nodes:
+                payload = node.model_dump()
+                if node.type == "academic_module":
+                    session.run(
+                        """
+                        MERGE (c:Course {id: $id})
+                        SET c.name = $name,
+                            c.group = $group,
+                            c.type = $type,
+                            c.val = $val
+                        """,
+                        payload,
+                    )
+                else:
+                    session.run(
+                        """
+                        MERGE (s:Skill {id: $id})
+                        SET s.name = $name,
+                            s.group = $group,
+                            s.type = $type,
+                            s.val = $val,
+                            s.gap_score = $gap_score
+                        """,
+                        payload,
+                    )
+
+            for link in links:
+                session.run(
+                    """
+                    MATCH (a {id: $source})
+                    MATCH (b {id: $target})
+                    MERGE (a)-[r:RELATES {relationship: $relationship}]->(b)
+                    SET r.strength = $strength
+                    """,
+                    {
+                        "source": link.source,
+                        "target": link.target,
+                        "relationship": link.relationship,
+                        "strength": link.strength,
+                    },
+                )
+        logger.info(
+            "Upserted %d nodes and %d links into Neo4j.",
+            len(nodes),
+            len(links),
+        )
+        return True
+
+    def seed_demo_graph(
+        self,
+        nodes: List[dict[str, Any]],
+        links: List[dict[str, Any]],
+    ) -> bool:
         """Seed demo nodes/links if Neo4j is available."""
         try:
             parsed_nodes = [Node.model_validate(n) for n in nodes]

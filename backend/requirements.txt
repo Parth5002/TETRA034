@@ -7,3 +7,4 @@ neo4j>=5.26.0
 chromadb>=0.5.23
 python-dotenv>=1.0.1
 python-multipart>=0.0.17
+pypdf>=4.0.0

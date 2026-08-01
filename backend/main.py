@@ -7,6 +7,7 @@ AnalysisResponse data instead of unhandled HTTP 500 errors.
 
 from __future__ import annotations
 
+import io
 import logging
 import re
 from typing import List, Optional
@@ -14,6 +15,7 @@ from typing import List, Optional
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pypdf import PdfReader
 
 from config import get_settings
 from schemas import AnalysisRequest, AnalysisResponse
@@ -73,11 +75,23 @@ def _extract_topics(syllabus_text: str) -> List[str]:
 
 
 async def _read_upload_text(file: Optional[UploadFile]) -> str:
-    """Decode an uploaded syllabus file as UTF-8 text."""
+    """Extract text from an uploaded syllabus file (PDF or plain text)."""
     if file is None:
         return ""
     try:
         raw = await file.read()
+        filename = (file.filename or "").lower()
+        if filename.endswith(".pdf"):
+            reader = PdfReader(io.BytesIO(raw))
+            pages: List[str] = []
+            for page in reader.pages:
+                extracted = page.extract_text() or ""
+                if extracted.strip():
+                    pages.append(extracted)
+            text = "\n".join(pages).strip()
+            if not text:
+                logger.warning("PDF upload produced empty text: %s", file.filename)
+            return text
         return raw.decode("utf-8", errors="ignore")
     except Exception as exc:  # noqa: BLE001
         logger.warning("Failed to read upload: %s", exc)

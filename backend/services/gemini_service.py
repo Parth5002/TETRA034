@@ -153,7 +153,7 @@ class GeminiService:
             "Use only node ids that appear in nodes for link source/target.\n"
             "Prefer realistic 2026 tech trends (RAG, agentic workflows, vector DBs, "
             "Neo4j Cypher, MLOps, fine-tuning, etc.).\n\n"
-            f"=== SYLLABUS ===\n{syllabus_text[:12000]}\n\n"
+            f"=== SYLLABUS ===\n{syllabus_text[:150000]}\n\n"
             f"=== VECTOR MARKET SKILL MATCHES ===\n{skill_block}\n"
         )
 
