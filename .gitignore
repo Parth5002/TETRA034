@@ -39,3 +39,6 @@ Thumbs.db
 *.log
 tmp/
 temp/
+
+# Repo dumps / packing tools
+repomix-output*.xml
