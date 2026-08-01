@@ -123,9 +123,38 @@ async def mock_analyze() -> AnalysisResponse:
             ai_recommendation={
                 "summary": "Demo payload unavailable.",
                 "actionable_update": "Retry /api/mock-analyze.",
+                "estimated_hours": 0,
+                "difficulty": "Low",
             },
             is_mock=True,
         )
+
+
+@app.get("/api/macro-graph", response_model=AnalysisResponse)
+async def get_macro_graph() -> AnalysisResponse:
+    """Fetch the global institutional knowledge graph from Neo4j."""
+    try:
+        neo4j = get_neo4j_service()
+        if not neo4j.is_available:
+            return _safe_fallback("Neo4j offline - returning mock macro graph")
+        graph = neo4j.get_macro_graph()
+        if not graph["nodes"]:
+            return _safe_fallback("Graph empty - returning mock macro graph")
+        return AnalysisResponse(
+            nodes=graph["nodes"],
+            links=graph["links"],
+            ai_recommendation={
+                "summary": "Macro Institutional View.",
+                "actionable_update": (
+                    "Showing all interconnected courses and skills."
+                ),
+                "estimated_hours": 0,
+                "difficulty": "Low",
+            },
+            is_mock=False,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return _safe_fallback(f"macro-graph error: {exc}")
 
 
 @app.post("/api/analyze", response_model=AnalysisResponse)

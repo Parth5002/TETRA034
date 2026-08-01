@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FileUp, Loader2, Sparkles, X } from "lucide-react";
+import { FileUp, Loader2, Network, Sparkles, X } from "lucide-react";
 
 const SAMPLE_SYLLABUS = `CS301 Data Structures & Algorithms
 - Arrays, linked lists, trees, graphs
@@ -16,7 +16,7 @@ CS401 Artificial Intelligence Fundamentals
 - Introduction to machine learning
 - Knowledge representation`;
 
-export default function SidebarInput({ onAnalyze, isLoading }) {
+export default function SidebarInput({ onAnalyze, onLoadMacro, isLoading }) {
   const [text, setText] = useState(SAMPLE_SYLLABUS);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -178,6 +178,16 @@ export default function SidebarInput({ onAnalyze, isLoading }) {
             Analyze skill gaps
           </>
         )}
+      </button>
+
+      <button
+        type="button"
+        onClick={onLoadMacro}
+        disabled={isLoading}
+        className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <Network className="h-4 w-4" />
+        Load Full Institutional Graph
       </button>
     </form>
   );

@@ -217,6 +217,8 @@ FALLBACK_ANALYSIS: dict = {
             "4) Bundle Docker/K8s and basic MLOps observability into the Software "
             "Engineering capstone so graduates can ship and monitor LLM services."
         ),
+        "estimated_hours": 24,
+        "difficulty": "High",
     },
     "is_mock": True,
 }

@@ -228,6 +228,86 @@ class Neo4jService:
             logger.warning("Neo4j demo seed failed: %s", exc)
             return False
 
+    def get_macro_graph(self, limit: int = 200) -> dict[str, Any]:
+        """
+        Fetch the global institutional Course→Skill graph from Neo4j.
+
+        Returns {"nodes": [...], "links": [...]} with deduplicated node IDs.
+        Returns empty arrays if Neo4j is unavailable or the query fails.
+        """
+        empty: dict[str, Any] = {"nodes": [], "links": []}
+        if not self.is_available or self._driver is None:
+            if not self._reconnect():
+                logger.warning("Macro graph unavailable — Neo4j offline.")
+                return empty
+
+        try:
+            with self._driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (c:Course)-[r:RELATES]->(s:Skill)
+                    RETURN c, r, s
+                    LIMIT $limit
+                    """,
+                    {"limit": limit},
+                )
+                nodes_by_id: dict[str, dict[str, Any]] = {}
+                links: List[dict[str, Any]] = []
+
+                for record in result:
+                    course = record["c"]
+                    skill = record["s"]
+                    rel = record["r"]
+
+                    course_id = course.get("id")
+                    skill_id = skill.get("id")
+                    if not course_id or not skill_id:
+                        continue
+
+                    if course_id not in nodes_by_id:
+                        nodes_by_id[course_id] = {
+                            "id": course_id,
+                            "name": course.get("name") or course_id,
+                            "group": int(course.get("group") or 1),
+                            "type": "academic_module",
+                            "val": int(course.get("val") or 18),
+                            "gap_score": None,
+                        }
+
+                    if skill_id not in nodes_by_id:
+                        gap = skill.get("gap_score")
+                        nodes_by_id[skill_id] = {
+                            "id": skill_id,
+                            "name": skill.get("name") or skill_id,
+                            "group": int(skill.get("group") or 2),
+                            "type": "industry_skill",
+                            "val": int(skill.get("val") or 14),
+                            "gap_score": float(gap) if gap is not None else None,
+                        }
+
+                    relationship = rel.get("relationship") or "MISSING_SKILL"
+                    if relationship not in ("COVERS", "MISSING_SKILL"):
+                        relationship = "MISSING_SKILL"
+                    strength = rel.get("strength")
+                    links.append(
+                        {
+                            "source": course_id,
+                            "target": skill_id,
+                            "relationship": relationship,
+                            "strength": float(strength) if strength is not None else 0.5,
+                        }
+                    )
+
+            logger.info(
+                "Macro graph fetched: %d nodes, %d links.",
+                len(nodes_by_id),
+                len(links),
+            )
+            return {"nodes": list(nodes_by_id.values()), "links": links}
+        except (Neo4jError, ServiceUnavailable, Exception) as exc:  # noqa: BLE001
+            logger.warning("Macro graph query failed: %s", exc)
+            return empty
+
 
 _neo4j_service: Optional[Neo4jService] = None
 

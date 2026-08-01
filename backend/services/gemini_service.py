@@ -56,8 +56,18 @@ ANALYSIS_JSON_SCHEMA: dict[str, Any] = {
             "properties": {
                 "summary": {"type": "string"},
                 "actionable_update": {"type": "string"},
+                "estimated_hours": {"type": "integer"},
+                "difficulty": {
+                    "type": "string",
+                    "enum": ["Low", "Medium", "High"],
+                },
             },
-            "required": ["summary", "actionable_update"],
+            "required": [
+                "summary",
+                "actionable_update",
+                "estimated_hours",
+                "difficulty",
+            ],
         },
         "is_mock": {"type": "boolean"},
     },
@@ -149,6 +159,9 @@ class GeminiService:
             "'MISSING_SKILL' (gap), and strength 0.0-1.0\n"
             "- An ai_recommendation with a concise summary and concrete actionable "
             "curriculum updates\n"
+            "- Include estimated_hours (integer) representing the total curriculum "
+            "time required to implement the changes, and difficulty "
+            "(Low/Medium/High) of adding these topics.\n"
             "- Set is_mock to false\n\n"
             "Use only node ids that appear in nodes for link source/target.\n"
             "Prefer realistic 2026 tech trends (RAG, agentic workflows, vector DBs, "

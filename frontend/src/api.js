@@ -33,4 +33,13 @@ export async function mockAnalyze() {
   return data;
 }
 
+/**
+ * Fetch the global institutional Course↔Skill graph from Neo4j.
+ * @returns {Promise<object>} AnalysisResponse
+ */
+export async function fetchMacroGraph() {
+  const { data } = await api.get("/api/macro-graph");
+  return data;
+}
+
 export default api;

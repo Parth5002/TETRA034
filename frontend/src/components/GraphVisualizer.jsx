@@ -10,10 +10,15 @@ function nodeLabel(node) {
   return `<div><strong>${node.name}</strong><br/>Type: ${node.type}${gap}</div>`;
 }
 
+function linkEndpointId(endpoint) {
+  return typeof endpoint === "object" ? endpoint.id : endpoint;
+}
+
 export default function GraphVisualizer({ graphData }) {
   const containerRef = useRef(null);
   const fgRef = useRef();
   const [dims, setDims] = useState({ width: 0, height: 0 });
+  const [filter, setFilter] = useState("ALL");
 
   useEffect(() => {
     const el = containerRef.current;
@@ -34,15 +39,31 @@ export default function GraphVisualizer({ graphData }) {
 
   const graphPayload = useMemo(() => {
     if (!graphData?.nodes?.length) return null;
-    return {
-      nodes: graphData.nodes.map((n) => ({ ...n })),
-      links: (graphData.links ?? []).map((l) => ({
+
+    let nodes = graphData.nodes.map((n) => ({ ...n }));
+    if (filter === "GAPS_ONLY") {
+      nodes = nodes.filter(
+        (n) =>
+          n.type === "academic_module" ||
+          (n.type === "industry_skill" &&
+            typeof n.gap_score === "number" &&
+            n.gap_score >= 0.5)
+      );
+    }
+
+    const allowedIds = new Set(nodes.map((n) => n.id));
+    const links = (graphData.links ?? [])
+      .map((l) => ({
         ...l,
-        source: typeof l.source === "object" ? l.source.id : l.source,
-        target: typeof l.target === "object" ? l.target.id : l.target,
-      })),
-    };
-  }, [graphData]);
+        source: linkEndpointId(l.source),
+        target: linkEndpointId(l.target),
+      }))
+      .filter(
+        (l) => allowedIds.has(l.source) && allowedIds.has(l.target)
+      );
+
+    return { nodes, links };
+  }, [graphData, filter]);
 
   return (
     <div ref={containerRef} className="absolute inset-0">
@@ -78,6 +99,31 @@ export default function GraphVisualizer({ graphData }) {
         </div>
       ) : (
         <>
+          <div className="absolute top-3 left-3 z-10 rounded-lg border border-slate-200 bg-white/95 backdrop-blur px-2 py-2 shadow-sm flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setFilter("ALL")}
+              className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                filter === "ALL"
+                  ? "bg-slate-900 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+              }`}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilter("GAPS_ONLY")}
+              className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                filter === "GAPS_ONLY"
+                  ? "bg-slate-900 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+              }`}
+            >
+              Gaps only
+            </button>
+          </div>
+
           <div className="absolute top-3 right-3 z-10 rounded-lg border border-slate-200 bg-white/95 backdrop-blur px-3 py-2 shadow-sm text-xs text-slate-600 flex flex-col gap-1.5">
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-blue-500" />
@@ -125,12 +171,10 @@ export default function GraphVisualizer({ graphData }) {
                 ctx.textAlign = "center";
                 ctx.textBaseline = "top";
 
-                // Add white halo for readability
                 ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
                 ctx.lineWidth = 3;
                 ctx.strokeText(node.name, node.x, node.y + size + 2);
 
-                // Draw primary text
                 ctx.fillStyle = "#334155";
                 ctx.fillText(node.name, node.x, node.y + size + 2);
               }}

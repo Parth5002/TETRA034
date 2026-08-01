@@ -33,6 +33,11 @@ class AIRecommendation(BaseModel):
 
     summary: str
     actionable_update: str
+    estimated_hours: int = Field(
+        default=0,
+        description="Estimated hours to teach the new updates",
+    )
+    difficulty: Literal["Low", "Medium", "High"] = Field(default="Medium")
 
 
 class AnalysisResponse(BaseModel):

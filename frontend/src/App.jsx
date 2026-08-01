@@ -3,7 +3,7 @@ import Header from "./components/Header.jsx";
 import SidebarInput from "./components/SidebarInput.jsx";
 import AIResultCard from "./components/AIResultCard.jsx";
 import GraphVisualizer from "./components/GraphVisualizer.jsx";
-import { analyzeSyllabus, mockAnalyze } from "./api.js";
+import { analyzeSyllabus, fetchMacroGraph, mockAnalyze } from "./api.js";
 
 export default function App() {
   const [graphData, setGraphData] = useState(null);
@@ -13,6 +13,15 @@ export default function App() {
   const [isMock, setIsMock] = useState(false);
   const [error, setError] = useState(null);
 
+  const applyResult = (result) => {
+    setGraphData({
+      nodes: result.nodes ?? [],
+      links: result.links ?? [],
+    });
+    setAiData(result.ai_recommendation ?? null);
+    setIsMock(Boolean(result.is_mock));
+  };
+
   const handleAnalyze = async (syllabusText, file = null) => {
     setIsLoading(true);
     setError(null);
@@ -20,13 +29,7 @@ export default function App() {
       const result = demoMode
         ? await mockAnalyze()
         : await analyzeSyllabus(syllabusText, file);
-
-      setGraphData({
-        nodes: result.nodes ?? [],
-        links: result.links ?? [],
-      });
-      setAiData(result.ai_recommendation ?? null);
-      setIsMock(Boolean(result.is_mock));
+      applyResult(result);
     } catch (err) {
       console.error("Analyze failed:", err);
       setError(
@@ -39,13 +42,35 @@ export default function App() {
     }
   };
 
+  const handleLoadMacro = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await fetchMacroGraph();
+      applyResult(result);
+    } catch (err) {
+      console.error("Macro graph failed:", err);
+      setError(
+        err?.response?.data?.detail ||
+          err?.message ||
+          "Macro graph failed. Is Neo4j / FastAPI running?"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="h-screen w-full bg-slate-50 flex flex-col overflow-hidden">
       <Header demoMode={demoMode} onDemoModeChange={setDemoMode} />
 
       <div className="flex flex-1 min-h-0">
         <aside className="w-1/3 p-4 overflow-y-auto border-r border-slate-200 bg-white flex flex-col gap-4">
-          <SidebarInput onAnalyze={handleAnalyze} isLoading={isLoading} />
+          <SidebarInput
+            onAnalyze={handleAnalyze}
+            onLoadMacro={handleLoadMacro}
+            isLoading={isLoading}
+          />
 
           {error && (
             <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
