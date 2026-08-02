@@ -77,7 +77,7 @@ export default function App() {
       <Header demoMode={demoMode} onDemoModeChange={setDemoMode} />
 
       <div className="flex flex-1 min-h-0">
-        <aside className="w-[400px] h-full overflow-y-auto border-r border-slate-200/80 bg-white/80 backdrop-blur-xl flex flex-col shrink-0 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] scroll-smooth relative">
+        <aside className="w-[400px] h-full overflow-y-auto border-r border-cyan-100/80 bg-gradient-to-b from-white via-sky-50/30 to-teal-50/20 backdrop-blur-xl flex flex-col shrink-0 z-10 shadow-[4px_0_24px_rgba(14,165,233,0.05)] scroll-smooth relative">
           <div className="p-5 flex flex-col gap-5 min-h-min pb-12">
             <SidebarInput
               onAnalyze={handleAnalyze}
@@ -86,18 +86,21 @@ export default function App() {
             />
 
             {error && (
-              <div className="rounded-lg border-l-4 border-l-red-500 bg-white p-3 shadow-sm flex items-start gap-2 relative">
-                <span className="text-red-500 font-bold mt-0.5">!</span>
+              <div className="animate-in-card rounded-xl border border-red-100 bg-white p-3.5 shadow-[0_8px_24px_rgba(239,68,68,0.08)] flex items-start gap-2.5 relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />
+                <span className="text-red-500 font-black mt-0.5 ml-1">!</span>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-slate-900">
+                  <p className="text-sm font-bold text-slate-900">
                     Analysis Error
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{error}</p>
+                  <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                    {error}
+                  </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setError(null)}
-                  className="text-slate-400 hover:text-slate-700"
+                  className="text-slate-400 hover:text-slate-700 transition-colors"
                 >
                   ✕
                 </button>
@@ -105,7 +108,7 @@ export default function App() {
             )}
 
             {isMock && aiData && (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+              <div className="animate-fade-in rounded-xl border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-3.5 py-2.5 text-xs text-amber-900 font-medium shadow-sm">
                 Showing mock/fallback data (is_mock=true). Toggle Demo Mode off
                 and ensure Gemini is configured for live analysis.
               </div>
@@ -119,18 +122,19 @@ export default function App() {
           <GraphVisualizer graphData={graphData} />
 
           {isLoading && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/40 backdrop-blur-md transition-all duration-500">
-              <div className="flex flex-col items-center gap-4 bg-white/90 px-8 py-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-200/60 backdrop-blur-xl animate-in-card">
-                <div className="relative w-12 h-12">
-                  <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
-                  <div className="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-                  <div className="absolute inset-0 bg-indigo-600/10 rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/45 backdrop-blur-md transition-all duration-500">
+              <div className="flex flex-col items-center gap-4 bg-white/95 px-9 py-7 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.12)] border border-slate-200/70 backdrop-blur-xl animate-in-card">
+                <div className="relative w-14 h-14">
+                  <div className="absolute inset-0 border-[3px] border-slate-100 rounded-full" />
+                  <div className="absolute inset-0 border-[3px] border-slate-900 border-t-transparent rounded-full animate-spin" />
+                  <div className="absolute inset-2 bg-slate-900/5 rounded-full animate-pulse" />
+                  <div className="absolute -inset-2 rounded-full border border-blue-200/50 ring-expand" />
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-bold text-slate-800 tracking-wide">
+                  <p className="text-sm font-extrabold text-slate-900 tracking-wide">
                     Synthesizing Curriculum
                   </p>
-                  <p className="text-xs font-medium text-slate-500 mt-1 animate-pulse">
+                  <p className="text-xs font-medium text-slate-500 mt-1.5 animate-pulse">
                     Running semantic gap analysis...
                   </p>
                 </div>
