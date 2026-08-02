@@ -1,4 +1,4 @@
-# 02_System_Design: NexusEd AI (CurricuAlign AI)
+# 02_System_Design: Axiomm
 
 ## 1. High-Level Architecture
 The system follows a decoupled architecture, separating the heavy AI processing from the lightweight interactive frontend:

@@ -1,14 +1,14 @@
 ---
-name: nexused-os
-description: Master skill for building NexusEd AI (CurricuAlign AI). Enforces Python/FastAPI backend, React/Vite frontend, and zero-crash AI integration policies.
+name: axiomm-os
+description: Master skill for building Axiomm. Enforces Python/FastAPI backend, React/Vite frontend, and zero-crash AI integration policies.
 ---
 
-# NexusEd AI Engineering OS & AI Guidelines
+# Axiomm Engineering OS & AI Guidelines
 
 ## 1. Project Context
-- **Name:** NexusEd AI (CurricuAlign AI)
+- **Name:** Axiomm
 - **Goal:** Analyze university syllabi against 2026 industry skill gaps using Graph and Vector databases.
-- **Architecture:** Strictly decoupled. `nexus-frontend` (React) and `nexus-backend` (FastAPI).
+- **Architecture:** Strictly decoupled. `frontend` (React) and `backend` (FastAPI).
 
 ## 2. Backend Rules (Python/FastAPI)
 - **Tech Stack:** Python 3.11+, FastAPI, Pydantic v2.

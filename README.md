@@ -1,4 +1,4 @@
-# 🎓 NexusEd AI — Dynamic Syllabus & Industry Skill-Gap Synchronizer
+# 🎓 Axiomm — Dynamic Syllabus & Industry Skill-Gap Synchronizer
 
 [![TETRA ID](https://img.shields.io/badge/TETRA%20ID-TETRA034-blue.svg?style=for-the-badge)](https://github.com/Parth5002/TETRA034)
 [![Hackathon](https://img.shields.io/badge/Event-TetraTHON%202026-orange.svg?style=for-the-badge)](https://nuv.ac.in)
@@ -17,11 +17,11 @@
 
 Higher education computer science curricula lag **3 to 5 years** behind market demands. Academic institutions lack automated, data-driven tools to audit syllabus content against real-time industry requirements. As a result, students graduate with high grades but face severe skill gaps in modern paradigms such as **RAG architectures, vector databases, agentic workflows, Neo4j graph querying, and MLOps observability**.
 
-**NexusEd AI (CurricuAlign AI)** solves this problem. It acts as an automated curriculum auditor for university deans and department chairs, instantly ingesting syllabus documents (PDF/Text), querying vector stores of live 2026 industry skill embeddings, generating structured gap graphs via Google Gemini 3.5 Flash, storing persistent skill ontologies in Neo4j AuraDB, and rendering an interactive WebGL force-graph with concrete, actionable curriculum updates.
+**Axiomm** solves this problem. It acts as an automated curriculum auditor for university deans and department chairs, instantly ingesting syllabus documents (PDF/Text), querying vector stores of live 2026 industry skill embeddings, generating structured gap graphs via Google Gemini 3.5 Flash, storing persistent skill ontologies in Neo4j AuraDB, and rendering an interactive WebGL force-graph with concrete, actionable curriculum updates.
 
 ---
 
-## 🌟 Key Differentiators & Why NexusEd AI Leads
+## 🌟 Key Differentiators & Why Axiomm Leads
 
 1. **Dual DB Hybrid Architecture (Vector + Knowledge Graph):** Combines **ChromaDB** (for high-speed semantic retrieval against pre-seeded 2026 skill embeddings) with **Neo4j AuraDB** (for persistent, explainable graph relationship modeling between academic modules and industry skills).
 2. **Zero-Crash Resiliency Protocol:** Built with an enterprise-grade fail-safe architecture. Every external service call (Gemini, Neo4j, ChromaDB) is guarded with multi-tier error catching and instant fallback handlers (`fallback_data.py`), guaranteeing **zero HTTP 500 errors** during live evaluation pitches.
@@ -100,7 +100,7 @@ The visualization engine renders real-time skill alignment using clear visual se
 
 ## ⚡ Zero-Crash Resiliency Protocol
 
-In hackathon environments, live demos frequently fail due to API rate limits or network drops. NexusEd AI implements a strict **Zero-Crash Policy**:
+In hackathon environments, live demos frequently fail due to API rate limits or network drops. Axiomm implements a strict **Zero-Crash Policy**:
 
 1. **Multi-Model Fallback Chain:** If `gemini-3.5-flash` encounters quota limits, the backend automatically cascades through candidate models (`gemini-3.6-flash`, `gemini-3.1-flash-lite`, `gemini-2.5-flash`).
 2. **Deterministic Fallback Payload (`fallback_data.py`):** If all external AI or database connections drop, the API gracefully catches the exception and returns a pre-validated, rich mock analysis payload with `is_mock: true`. The frontend never renders an HTTP 500 error or blank canvas.

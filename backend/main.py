@@ -1,5 +1,5 @@
 """
-NexusEd AI (CurricuAlign AI) — FastAPI application entrypoint.
+Axiomm — FastAPI application entrypoint.
 
 Zero-crash policy: every endpoint catches failures and returns fallback
 AnalysisResponse data instead of unhandled HTTP 500 errors.
@@ -29,12 +29,12 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("nexused")
+logger = logging.getLogger("axiomm")
 
 app = FastAPI(
-    title="NexusEd AI API",
+    title="Axiomm API",
     description=(
-        "CurricuAlign AI — bridges university syllabi and 2026 industry skill gaps "
+        "Axiomm — bridges university syllabi and 2026 industry skill gaps "
         "using Gemini 2.5 Flash, ChromaDB, and Neo4j AuraDB."
     ),
     version="1.0.0",

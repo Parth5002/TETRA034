@@ -1,4 +1,4 @@
-"""Pydantic v2 schemas matching the NexusEd AI frontend JSON contract."""
+"""Pydantic v2 schemas matching the Axiomm frontend JSON contract."""
 
 from typing import List, Literal, Optional
 

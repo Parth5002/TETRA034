@@ -148,7 +148,7 @@ class GeminiService:
 
         skill_block = json.dumps(vector_matches, indent=2)
         prompt = (
-            "You are NexusEd AI, a curriculum alignment expert for 2026 university "
+            "You are Axiomm, a curriculum alignment expert for 2026 university "
             "programs. Compare the syllabus below against the industry skill "
             "matches retrieved from a vector database.\n\n"
             "Produce a structured analysis with:\n"

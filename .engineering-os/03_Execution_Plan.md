@@ -27,7 +27,7 @@
 | Demo Mode off + Analyze | Live Gemini + Neo4j upsert |
 | Graph colors | Blue academic · Red gap ≥ 0.5 · Green covered |
 | PDF upload | Text extracted; analysis runs |
-| Loading overlay | “NexusEd AI is mapping semantic gaps...” |
+| Loading overlay | “Axiomm is mapping semantic gaps...” |
 
 ## Optional / Future (Out of MVP Scope)
 - PWA packaging for offline install

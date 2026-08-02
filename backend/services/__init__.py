@@ -1,1 +1,1 @@
-"""Service package for NexusEd AI backend integrations."""
+"""Service package for Axiomm backend integrations."""
