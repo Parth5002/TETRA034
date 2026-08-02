@@ -5,7 +5,7 @@
 [![Track](https://img.shields.io/badge/Track-EdTech-green.svg?style=for-the-badge)]()
 [![Backend](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Python%203.11-009688.svg?style=for-the-badge)]()
 [![Frontend](https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite%20%7C%20WebGL-61DAFB.svg?style=for-the-badge)]()
-[![AI Engine](https://img.shields.io/badge/AI Engine-Google%20Gemini%203.5%20Flash-4285F4.svg?style=for-the-badge)]()
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-Google%20Gemini%203.5%20Flash-4285F4.svg?style=for-the-badge)]()
 
 > **Official Indo-French AI Hackathon Submission**  
 > **Organizers:** Navrachana University (Vadodara) & ISEN Méditerranée (France)  
