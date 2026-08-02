@@ -27,6 +27,8 @@ node_modules/
 dist/
 build/
 .vite/
+.output/
+.wrangler/
 
 # OS / IDE
 .DS_Store

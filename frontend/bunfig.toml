@@ -1,0 +1,3 @@
+# bunfig.toml — local package install settings
+[install]
+# Prefer stable registry installs for the Axiomm frontend.
