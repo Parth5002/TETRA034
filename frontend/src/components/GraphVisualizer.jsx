@@ -106,31 +106,31 @@ export default function GraphVisualizer({ graphData }) {
       {!graphPayload ? (
         <div className="h-full w-full flex items-center justify-center p-8">
           <div className="max-w-md text-center animate-in-card">
-            <div className="relative mx-auto mb-5 h-16 w-16">
+            <div className="relative mx-auto mb-6 h-16 w-16">
               <div className="absolute inset-0 rounded-2xl border border-blue-200/60 ring-expand" />
-              <div className="relative h-16 w-16 rounded-2xl bg-white border border-slate-200 shadow-[0_12px_30px_rgba(15,23,42,0.08)] flex items-center justify-center">
-                <GitBranch className="h-7 w-7 text-slate-700 icon-float" />
+              <div className="relative h-16 w-16 rounded-2xl bg-gradient-to-br from-white to-slate-50 border border-slate-200 shadow-[0_16px_40px_rgba(15,23,42,0.1)] flex items-center justify-center">
+                <GitBranch className="h-8 w-8 text-blue-600 icon-float" />
               </div>
             </div>
-            <h3 className="text-lg font-extrabold text-slate-900 tracking-tight mb-2">
+            <h3 className="text-lg font-extrabold text-slate-900 tracking-tight mb-3">
               Upload syllabus to map skills
             </h3>
-            <p className="text-sm text-slate-500 leading-relaxed font-medium">
+            <p className="text-sm text-slate-600 leading-relaxed font-medium mb-6">
               Paste a syllabus or drop a PDF on the left and run analysis.
               Academic modules appear in blue; severe skill gaps in red; covered
               skills in green.
             </p>
-            <div className="mt-6 flex items-center justify-center gap-3 text-xs font-semibold text-slate-600">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 border border-slate-200 px-2.5 py-1 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-blue-500" />
+            <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 flex-wrap">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-slate-200 px-3 py-1.5 shadow-sm">
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                 Academic
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 border border-slate-200 px-2.5 py-1 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-red-500 live-dot" />
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-slate-200 px-3 py-1.5 shadow-sm">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500 live-dot shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
                 Severe gap
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 border border-slate-200 px-2.5 py-1 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-slate-200 px-3 py-1.5 shadow-sm">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 Covered
               </span>
             </div>
@@ -138,11 +138,11 @@ export default function GraphVisualizer({ graphData }) {
         </div>
       ) : (
         <>
-          <div className="absolute top-3 left-3 z-10 glass-panel rounded-xl px-2 py-2 flex items-center gap-1.5 animate-fade-in">
+          <div className="absolute top-4 left-4 z-10 glass-panel rounded-2xl px-3 py-2.5 flex items-center gap-1.5 animate-fade-in shadow-[0_8px_32px_rgba(15,23,42,0.12)]">
             <button
               type="button"
               onClick={() => setFilter("ALL")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all duration-300 ${
+              className={`rounded-lg px-3 py-2 text-xs font-bold transition-all duration-300 ${
                 filter === "ALL"
                   ? "bg-slate-900 text-white shadow-md"
                   : "bg-white/70 text-slate-600 hover:bg-white border border-slate-200/80"
@@ -153,7 +153,7 @@ export default function GraphVisualizer({ graphData }) {
             <button
               type="button"
               onClick={() => setFilter("GAPS_ONLY")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all duration-300 ${
+              className={`rounded-lg px-3 py-2 text-xs font-bold transition-all duration-300 ${
                 filter === "GAPS_ONLY"
                   ? "bg-slate-900 text-white shadow-md"
                   : "bg-white/70 text-slate-600 hover:bg-white border border-slate-200/80"
@@ -161,28 +161,28 @@ export default function GraphVisualizer({ graphData }) {
             >
               Gaps only
             </button>
-            <div className="w-px h-4 bg-slate-200 mx-1" />
+            <div className="w-px h-5 bg-slate-200 mx-0.5" />
             <button
               type="button"
               onClick={() => fgRef.current?.zoomToFit(400, 60)}
-              className="rounded-lg px-2 py-1.5 text-slate-600 hover:bg-white hover:text-slate-900 transition-all duration-300"
+              className="rounded-lg px-2.5 py-2 text-slate-600 hover:bg-white hover:text-slate-900 transition-all duration-300"
               title="Recenter Graph"
             >
-              <Expand className="h-3.5 w-3.5" />
+              <Expand className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="absolute top-3 right-3 z-10 glass-panel rounded-xl px-3.5 py-2.5 text-xs text-slate-600 flex flex-col gap-2 animate-fade-in">
-            <span className="inline-flex items-center gap-2 font-semibold">
-              <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+          <div className="absolute top-4 right-4 z-10 glass-panel rounded-2xl px-4 py-3 text-xs text-slate-700 flex flex-col gap-2.5 animate-fade-in shadow-[0_8px_32px_rgba(15,23,42,0.12)]">
+            <span className="inline-flex items-center gap-2.5 font-semibold">
+              <span className="h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.7)]" />
               Academic module
             </span>
-            <span className="inline-flex items-center gap-2 font-semibold">
-              <span className="h-2 w-2 rounded-full bg-red-500 live-dot shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
+            <span className="inline-flex items-center gap-2.5 font-semibold">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500 live-dot shadow-[0_0_10px_rgba(239,68,68,0.7)]" />
               Severe gap (≥ 0.5)
             </span>
-            <span className="inline-flex items-center gap-2 font-semibold">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+            <span className="inline-flex items-center gap-2.5 font-semibold">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.7)]" />
               Covered (&lt; 0.5)
             </span>
           </div>
@@ -231,8 +231,13 @@ export default function GraphVisualizer({ graphData }) {
                 // Draw outer glow for severe gaps
                 if (color === "#ef4444" && !isDimmed) {
                   ctx.beginPath();
-                  ctx.arc(node.x, node.y, size + 4, 0, 2 * Math.PI, false);
-                  ctx.fillStyle = "rgba(239, 68, 68, 0.2)";
+                  ctx.arc(node.x, node.y, size + 6, 0, 2 * Math.PI, false);
+                  ctx.fillStyle = "rgba(239, 68, 68, 0.15)";
+                  ctx.fill();
+
+                  ctx.beginPath();
+                  ctx.arc(node.x, node.y, size + 10, 0, 2 * Math.PI, false);
+                  ctx.fillStyle = "rgba(239, 68, 68, 0.08)";
                   ctx.fill();
                 }
 
@@ -240,32 +245,34 @@ export default function GraphVisualizer({ graphData }) {
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
                 ctx.fillStyle = color;
-                ctx.shadowBlur = !isDimmed && color === "#ef4444" ? 20 : 5;
+                ctx.shadowBlur = !isDimmed && color === "#ef4444" ? 28 : 8;
                 ctx.shadowColor = color;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
                 ctx.fill();
 
                 // Draw premium white stroke around node
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 2.5;
                 ctx.strokeStyle = "#ffffff";
+                ctx.shadowBlur = 0;
                 ctx.stroke();
 
-                // Reset shadow for crisp text
-                ctx.shadowBlur = 0;
-
                 if (!isDimmed) {
-                  const fontSize = Math.max(5, 16 / globalScale);
-                  ctx.font = `600 ${fontSize}px system-ui, -apple-system, sans-serif`;
+                  const fontSize = Math.max(6, 16 / globalScale);
+                  ctx.font = `700 ${fontSize}px system-ui, -apple-system, sans-serif`;
                   ctx.textAlign = "center";
-                  ctx.textBaseline = "top";
+                  ctx.textBaseline = "middle";
 
-                  // Crisp text halo
-                  ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
-                  ctx.lineWidth = 4;
-                  ctx.strokeText(node.name, node.x, node.y + size + 4);
+                  // Crisp text halo with strong contrast
+                  ctx.strokeStyle = "rgba(255, 255, 255, 1)";
+                  ctx.lineWidth = 4.5;
+                  ctx.lineJoin = "round";
+                  ctx.strokeText(node.name, node.x, node.y + size + 6);
 
                   // Main text
-                  ctx.fillStyle = "#1e293b";
-                  ctx.fillText(node.name, node.x, node.y + size + 4);
+                  ctx.fillStyle = "#0f172a";
+                  ctx.shadowBlur = 0;
+                  ctx.fillText(node.name, node.x, node.y + size + 6);
                 }
 
                 ctx.globalAlpha = 1.0;
@@ -274,7 +281,7 @@ export default function GraphVisualizer({ graphData }) {
               nodePointerAreaPaint={(node, color, ctx) => {
                 const size = Math.max(10, (node.val || 12) * 0.8);
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, size + 2, 0, 2 * Math.PI, false);
+                ctx.arc(node.x, node.y, size + 4, 0, 2 * Math.PI, false);
                 ctx.fillStyle = color;
                 ctx.fill();
               }}
@@ -290,8 +297,8 @@ export default function GraphVisualizer({ graphData }) {
                 }
 
                 return link.relationship === "MISSING_SKILL"
-                  ? "rgba(239, 68, 68, 0.4)"
-                  : "rgba(16, 185, 129, 0.4)";
+                  ? "rgba(239, 68, 68, 0.5)"
+                  : "rgba(16, 185, 129, 0.5)";
               }}
               linkWidth={(link) => {
                 const source = linkEndpointId(link.source);
@@ -299,20 +306,20 @@ export default function GraphVisualizer({ graphData }) {
                 const isActive =
                   hoverNode != null &&
                   (source === hoverNode || target === hoverNode);
-                const base = Math.max(1, (link.strength || 0.5) * 3);
-                return hoverNode != null && isActive ? base + 1.5 : base;
+                const base = Math.max(1.2, (link.strength || 0.5) * 3.5);
+                return hoverNode != null && isActive ? base + 2 : base;
               }}
-              linkDirectionalParticles={3}
+              linkDirectionalParticles={4}
               linkDirectionalParticleWidth={(link) =>
-                link.relationship === "MISSING_SKILL" ? 3.5 : 2.5
+                link.relationship === "MISSING_SKILL" ? 4 : 3
               }
               linkDirectionalParticleColor={(link) =>
                 link.relationship === "MISSING_SKILL"
-                  ? "rgba(239, 68, 68, 0.9)"
-                  : "rgba(16, 185, 129, 0.9)"
+                  ? "rgba(239, 68, 68, 1)"
+                  : "rgba(16, 185, 129, 1)"
               }
-              linkDirectionalParticleSpeed={0.006}
-              linkDirectionalArrowLength={4}
+              linkDirectionalParticleSpeed={0.007}
+              linkDirectionalArrowLength={5}
               linkDirectionalArrowRelPos={1}
               cooldownTicks={120}
               d3AlphaDecay={0.022}

@@ -73,11 +73,13 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full bg-slate-50 flex flex-col overflow-hidden">
-      <Header demoMode={demoMode} onDemoModeChange={setDemoMode} />
+    <div className="h-screen w-full bg-dot-grid flex flex-col overflow-hidden">
+      <div className="pt-2.5 px-3 z-30">
+        <Header demoMode={demoMode} onDemoModeChange={setDemoMode} />
+      </div>
 
-      <div className="flex flex-1 min-h-0">
-        <aside className="w-[400px] h-full overflow-y-auto border-r border-cyan-100/80 bg-gradient-to-b from-white via-sky-50/30 to-teal-50/20 backdrop-blur-xl flex flex-col shrink-0 z-10 shadow-[4px_0_24px_rgba(14,165,233,0.05)] scroll-smooth relative">
+      <div className="flex flex-1 min-h-0 p-3 gap-3">
+        <aside className="w-[400px] h-full overflow-y-auto rounded-2xl glass-panel flex flex-col shrink-0 z-10 shadow-[0_12px_40px_rgba(15,23,42,0.08)] scroll-smooth relative backdrop-blur-xl">
           <div className="p-5 flex flex-col gap-5 min-h-min pb-12">
             <SidebarInput
               onAnalyze={handleAnalyze}
@@ -118,23 +120,29 @@ export default function App() {
           </div>
         </aside>
 
-        <main className="flex-1 h-full relative bg-slate-50 bg-dot-grid min-w-0 shadow-[inset_4px_0_24px_rgba(0,0,0,0.02)]">
+        <main className="flex-1 h-full relative min-w-0 rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(240, 249, 255, 0.4) 0%, rgba(245, 243, 255, 0.4) 100%)' }}>
           <GraphVisualizer graphData={graphData} />
 
           {isLoading && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/45 backdrop-blur-md transition-all duration-500">
-              <div className="flex flex-col items-center gap-4 bg-white/95 px-9 py-7 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.12)] border border-slate-200/70 backdrop-blur-xl animate-in-card">
-                <div className="relative w-14 h-14">
-                  <div className="absolute inset-0 border-[3px] border-slate-100 rounded-full" />
-                  <div className="absolute inset-0 border-[3px] border-slate-900 border-t-transparent rounded-full animate-spin" />
-                  <div className="absolute inset-2 bg-slate-900/5 rounded-full animate-pulse" />
-                  <div className="absolute -inset-2 rounded-full border border-blue-200/50 ring-expand" />
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center glass-panel-dark transition-all duration-500">
+              <div className="flex flex-col items-center gap-5 glass-panel rounded-3xl px-10 py-10 shadow-[0_24px_64px_rgba(0,0,0,0.3)] border border-white/20 animate-in-card">
+                <div className="relative w-20 h-20">
+                  {/* Outer pulsing ring */}
+                  <div className="absolute -inset-3 rounded-full border-2 border-transparent border-t-cyan-400 border-r-cyan-300 animate-spin opacity-60" />
+                  {/* Middle scanning ring */}
+                  <div className="absolute -inset-1.5 rounded-full border-[2.5px] border-blue-500/30" style={{ animation: 'scanningRing 2.4s ease-out infinite' }} />
+                  {/* Inner circle */}
+                  <div className="absolute inset-0 rounded-full border-[3px] border-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-gradient-to-br from-blue-500/20 to-teal-500/10" />
+                  {/* Core glow */}
+                  <div className="absolute inset-2 bg-gradient-to-br from-cyan-400/30 to-blue-400/20 rounded-full blur-xl animate-pulse" />
+                  {/* Central dot */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-white shadow-lg" />
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-extrabold text-slate-900 tracking-wide">
-                    Synthesizing Curriculum
+                  <p className="text-base font-extrabold text-white tracking-tight">
+                    Synthesizing Curriculum Intelligence
                   </p>
-                  <p className="text-xs font-medium text-slate-500 mt-1.5 animate-pulse">
+                  <p className="text-sm font-medium text-slate-200 mt-2 animate-pulse">
                     Running semantic gap analysis...
                   </p>
                 </div>
